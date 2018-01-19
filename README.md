@@ -46,7 +46,9 @@ The 2nd and 3rd arguments are both empty, you can ignore these two now, detail u
 
 * **Peer to Peer RPC Invocation**
 
-**Client Example:**   
+**Client Example:**  
+
+Read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) for full example.
 
 ```
 int main(int argc, char* argv[])
@@ -62,6 +64,8 @@ If no hosts providing command `"sayHello"`, an empty string `""` returned.
 
 
 **Server Example:**   
+
+Read [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) for full example.
 
 ```
 int main(int argc, char* argv[])
@@ -81,6 +85,8 @@ The above code demonstrates C++11 `lambda` as `callback function`. When a host `
 * **`Publish and Subscribe Messaging Model`**   
 
 **Publisher Example:**   
+
+Read [publisher.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/publisher.cc) for full example.
 
 ```
 std::string getTemperature()
@@ -114,6 +120,8 @@ int main(int argc, char* argv[])
 `````
 
 **Subscriber Example:**
+
+Read [subscriber.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/subscriber.cc) for full example.
 
 `````
 cc::CorbaComm* _cc = nullptr;
@@ -353,3 +361,29 @@ Description: To unsubscribe an event
 Parameters : const SID&, the `subscription id` returned by `onEvent()`
 Return     : N/A
 ```
+
+# 5. Command Routing
+
+If you have read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) examples, you may experience how simple and easy they are. The client will never know who and where the server is, event without any knowledge/information about `IP`, `hostname`, or `port`, but it does make a RPC-invocation successfully. Actually, the `call-path` is routed automatically by `CorbaComm`. The mechanism is called `Command Routing`.
+
+The `CorbaComm` support two types of `Command Routing`, they are:
+* **Early Command Routing**
+* **Late Command Routing**
+
+## Early Command Routing
+
+`Early Command Routing` is done immediately after you launch a client or a server process.   
+
+If you want `CorbaComm` to do `Early Command Routing`, you code must clearly specify the second (offer commands) and/or the third (want commands) parameters of `connect()` methods.   
+
+Once the `call-path` is determined, the `CorbaComm` will cache this path, no more routing tasks is needed for later invocations.
+
+## Late Command Routing
+
+`Late Command Routing` means the call-path is routed on demand. If a server doen't specify the second parameter (offer commands) of `connect()`, or a client doesn't specify the third pamameter (want commands), the `call-path` is routed when a client makes the first attempt of invocation.    
+
+Like `Early Command Routing`, once the call-path is determined, it'll be cached and no more routing tasks is needed for later invocations.
+
+Sometimes `Late Command Routing` is refered to `Lazy Command Routing`, since the devlopers are `lazy` to specify the second and third parameters of `connect()`.
+
+
