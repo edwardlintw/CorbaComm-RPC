@@ -1,0 +1,5 @@
+corbaComm.hh
+corbaCommSK.cc
+corbaCommDynSK.cc
+*.o
+lib*
