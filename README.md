@@ -3,7 +3,7 @@
 # 1. Abstract
 
 ## What is `CorbaComm`
-`CorbaComm` is a C++ RPC library based on `CORBA` middleware; the intent is to hide complicated `CORBA` knowledge and details to make this library as easy as possible. The implementation highly depends on two `CORBA` implementations, [omniORB](http://omniorb.sourceforge.net/) and [omniNotify](http://omninotify.sourceforge.net/).
+`CorbaComm` is a C++ RPC library based on `CORBA` middleware; the intent is to hide complicated `CORBA` knowledge and details to make this library as easy as possible. The implementation fully depends on two `CORBA` implementations, [omniORB](http://omniorb.sourceforge.net/) and [omniNotify](http://omninotify.sourceforge.net/).
 
 The `CorbaComm` library offers two types of communication model:
 
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     ...
 }
 ```
-`"sayHello"` is command string literal; it is user-defined. This command will be routed to the server (aka command provder) which provides `"sayHello"` command.    
+`"sayHello"` is string literal command; it is user-defined. This command will be routed to the server (aka command provder) which provides `"sayHello"` command.    
 If no hosts providing command `"sayHello"`, an empty string `""` returned.
 
 
@@ -156,10 +156,12 @@ int main(int argc, char* argv[])
 
 ### About CORBA
 
-The `CorbaComm` lib hides any `CORBA` knowledge/information, if you are really interested in this topic, please have a look and visit the followings to have a basic understanding of `CORBA` technology.
+The `CorbaComm` lib hides any `CORBA` knowledge/information, if you are really interested in this topic, please take a look and visit the followings to have a basic understanding of `CORBA` technology.
 * [OMG Welcome to CORBA](http://www.corba.org)
 * [OMG CORBA FAQ](http://www.corba.org/faq.htm)
 * [CORBA on wiki](https://en.wikipedia.org/wiki/Common_Object_Request_Broker_Architecture)
+* [omniORB, my favarite CORBA implementation, including CORBA Name Service omniNames](http://omniorb.sourceforge.net/)
+* [omniNotify, CORBA Notification Service Based on omniORB](http://omninotify.sourceforge.net/)
 
 # 2. Prerequisite
 
@@ -226,11 +228,13 @@ sudo -i
 DYLD_LIBRARY_PATH=/usr/local/lib notifd&
 ````
 
+The above library search path `/usr/local/lib` is `omniORB/omniNotify` libraries' installation path. If you install `omniORB/omniNotify` libraries to other path, you must alter the above commands.   
+
 Please visit origin website and omniORB's/omniNotify's README for more detail and concrete information.
 
 # 3. How to Build CorbaComm
 
-Currently `CorbaComm` supports `Linux` and `Mac` only, you may need to modify `Makefile` in order to build for other platforms. `CorbaComm` has been tested under `Ubuntu Linux 32/64-bit`, `Raspberry Pi3 32-bit` and `Mac OSX 32/64-bit`.     
+Currently `CorbaComm` is built and tested under `Linux` and `Mac` only, you may need to modify `Makefile` in order to build for other platforms. `CorbaComm` has been tested under `Ubuntu Linux 32/64-bit`, `Raspberry Pi3 32-bit` and `Mac OSX 32/64-bit`.     
 
 To build `CorbaComm`, clone this repository first, then simply `make` to build the library.
 
@@ -245,9 +249,9 @@ If there's no error, you can install library and header files by `make install`.
 sudo make install
 ```
 
-By default, the library will installed to `/usr/local/lib/` and headers to `/usr/local/include`.
+By default, the library will be installed to `/usr/local/lib/` and headers to `/usr/local/include`.
 
-After installing `CorbaComm`, you can build `examples` and learn how to write an app based on `CorbaComm`.
+After installing `CorbaComm`, you can build `examples/` and learn how to write a `CorbaComm` programs.
 
 ```
 cd examples
@@ -364,7 +368,7 @@ Return     : N/A
 
 # 5. Command Routing
 
-If you have read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) examples, you may experience how simple and easy they are. The client will never know who and where the server is, event without any knowledge/information about `IP`, `hostname`, or `port`, but it does make a RPC-invocation successfully. Actually, the `call-path` is routed automatically by `CorbaComm`. The mechanism is called `Command Routing`.
+If you have read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) examples, you may experience how simple and easy they are. The client will never know who and where the server is, even without any knowledge/information about `IP`, `hostname`, or `port`, but it does make a RPC-invocation successfully. Actually, the `call-path` is routed automatically by `CorbaComm`. The mechanism is called `Command Routing`.
 
 The `CorbaComm` support two types of `Command Routing`, they are:
 * **Early Command Routing**
@@ -374,7 +378,7 @@ The `CorbaComm` support two types of `Command Routing`, they are:
 
 `Early Command Routing` is done immediately after you launch a client or a server process.   
 
-If you want `CorbaComm` to do `Early Command Routing`, you code must clearly specify the second (offer commands) and/or the third (want commands) parameters of `connect()` methods.   
+If you want `CorbaComm` to do `Early Command Routing`, your code must explicitly specify the second (offer commands) and/or the third (want commands) parameters of `connect()` methods, like [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) do.   
 
 Once the `call-path` is determined, the `CorbaComm` will cache this path, no more routing tasks is needed for later invocations.
 
@@ -384,6 +388,6 @@ Once the `call-path` is determined, the `CorbaComm` will cache this path, no mor
 
 Like `Early Command Routing`, once the call-path is determined, it'll be cached and no more routing tasks is needed for later invocations.
 
-Sometimes `Late Command Routing` is refered to `Lazy Command Routing`, since the devlopers are `lazy` to specify the second and third parameters of `connect()`.
+Sometimes `Late Command Routing` is refered to `Lazy Command Routing`, since the devlopers are `lazy` to specify the second and third parameters of `connect()`, leave them both empty.   
 
 
