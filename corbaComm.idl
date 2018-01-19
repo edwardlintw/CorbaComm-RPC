@@ -1,0 +1,18 @@
+#ifndef _CORBA_COMM_IDL
+#define _CORBA_COMM_IDL
+
+#pragma prefix "edwardlin.tw"
+
+module CorbaCommModule {
+
+interface Provider {
+
+    string execCmd(in string cmd, in string param);
+
+};
+
+};
+
+#endif
+
+
