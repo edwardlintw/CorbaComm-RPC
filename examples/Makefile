@@ -1,10 +1,10 @@
-TARGETS=rpcServer rpcClient publisher subscriber
+TARGETS=rpcServer rpcClient publisher subscriber rwServer rwClient
 
 UNAME = $(shell uname -s)
 
-CC=g++ -c -O2 -std=c++11 -DNDEBUG  -Wall -Wno-unused -fexceptions -D__OMNIORB4__ -D_REENTRANT -I/usr/local/include -I/usr/local/include/COS -I. 
+CC=g++ -c -O2 -std=c++14 -DNDEBUG  -Wall -Wno-unused -fexceptions -D__OMNIORB4__ -D_REENTRANT -I/usr/local/include -I/usr/local/include/COS -I. 
 
-LD=g++ -o $@ -O2 -std=c++11 -DNDEBUG -Wall -Wno-unused -fexceptions -L/usr/local/lib $^ -lpthread -lcorbaComm
+LD=g++ -o $@ -O2 -std=c++14 -DNDEBUG -Wall -Wno-unused -fexceptions -L/usr/local/lib $^ -lpthread -lcorbaComm
 
 ifeq ($(UNAME), Linux)
 	CC += -D__OSVERSION__=2 -D__linux__ 
@@ -16,6 +16,12 @@ endif
 CC += $<
 
 all: $(TARGETS)
+
+rwServer: rwServer.o
+	$(LD)
+
+rwClient: rwClient.o
+	$(LD)
 
 rpcServer: rpcServer.o
 	$(LD)

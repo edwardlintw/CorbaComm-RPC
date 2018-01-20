@@ -3,13 +3,15 @@
 
 // define commands for both servers and clients to follow
 //
-#define cmdGetData  "getData"
-#define cmdSayHello "sayHello"
+#define cmdGetData          "getData"
+#define cmdSayHello         "sayHello"
+#define cmdReadTemperature  "readTemperature"
+#define cmdWriteTemperature "writeTemperature"
 
 // define events for both subcribers and publishers
 //
-#define topicTemperature   "temperature"
-#define topicHumidity      "humidity"
+#define topicTemperature    "temperature"
+#define topicHumidity       "humidity"
 
 #endif
 

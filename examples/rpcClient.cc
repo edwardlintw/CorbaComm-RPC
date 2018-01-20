@@ -15,11 +15,6 @@ int main(int argc, char* argv[])
                            {cmdGetData, cmdSayHello}, // but want these cmds
                            argc, argv);
 
-    if (nullptr == cc) {
-        std::cerr << "Can't connect to CorbaComm.\n";
-        return -1;
-    }
-
     std::srand((unsigned)time(nullptr));
     char        buf[80];
     std::string returnData;

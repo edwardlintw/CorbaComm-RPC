@@ -22,11 +22,6 @@ int main(int argc, char* argv[])
                            { },                       // but want nothing
                            argc, argv);
 
-    if (nullptr == _cc) {
-        std::cerr << "Can't connect to CorbaComm.\n";
-        return -1;
-    }
-
     // use tradition callback
     //
     _cc->onCmd(cmdSayHello, &commandCallback);

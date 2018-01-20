@@ -28,11 +28,6 @@ int main(int argc, char* argv[])
                            { }, { },            // both empty
                            argc, argv);
 
-    if (nullptr == cc) {
-        std::cerr << "Can't connect to CorbaComm.\n";
-        return -1;
-    }
-
     while (1) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
         if (std::rand() % 2 == 0)

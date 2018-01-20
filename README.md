@@ -1,8 +1,22 @@
 # CorbaComm, an RPC library based on CORBA by Leveraging omniORB and omniNotify
 
-# 1. Abstract
+# Table of Contents
+1. [Abstract](#1-abstract)    
+   [What is CorbaComm](#what-is-corbacomm)   
+   [About Corba](#about-corba)    
+2. [Build Prerequisite](#2-build-prerequisite)
+3. [How to Build CorbaComm](#3-how-to-build-corbacomm)
+4. [C++ Class And Methods](#4-c-class-and-methods)
+5. [Running Examples](#5-running-examples)
+6. [Command Routing](#6-command-routing)   
+   [Early Command Routing](#early-command-routing)   
+   [Late Command Routing](#late-command-routing)   
+7. [Multithreading Considerations](#7-multithreading-considerations)
+8. [Distributed RPC](#8-distributed-rpc)
 
-## What is `CorbaComm`
+## 1. Abstract
+
+### What is `CorbaComm`
 `CorbaComm` is a C++ RPC library based on `CORBA` middleware; the intent is to hide complicated `CORBA` knowledge and details to make this library as easy as possible. The implementation fully depends on two `CORBA` implementations, [omniORB](http://omniorb.sourceforge.net/) and [omniNotify](http://omninotify.sourceforge.net/).
 
 The `CorbaComm` library offers two types of communication model:
@@ -10,17 +24,17 @@ The `CorbaComm` library offers two types of communication model:
 * **`Peer to Peer RPC Invocation`**
 * **`Publish and Subscribe Messaging Model`**
 
-### Peer to Peer RPC Invocation
+#### Peer to Peer RPC Invocation
 
 `Peer to Peer RPC Invocation` means to invoke a direct RPC-call. A client requests a command to a server directly for asking data, or ask the server to do something.   
 
-### Publish and Subscribe Messaging Model.
+#### Publish and Subscribe Messaging Model.
 
 `Publish and Subscribe Messaging Model` is for a `publisher` to publish events (data, message) to any `subscribers` via `message queue`. Publishers are loosely coupled to subscribers, and need not even know of their existence. With the topic being the focus, publishers and subscribers are allowed to remain ignorant of system topology.   
 
 For more information, please refer to [Publish-Subscribe Wiki](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern).
 
-### Quick CorbaComm Examples:
+#### Quick CorbaComm Examples:
 
 * **Initialize CorbaComm**   
 The simplest way to use and inialize `CorbaComm` is a one-liner code:
@@ -33,10 +47,6 @@ int main(int argc, char* argv[])
 {
     cc::CorbaComm* cc = 
     cc::CorbaComm::connect("hostId", { }, { }, argc, argv);
-    if (nullptr == cc ) {
-        std::cerr << "Can't connect to CorbaComm.\n";
-        retur -1
-    }
     ...
 }
 ```
@@ -154,7 +164,7 @@ int main(int argc, char* argv[])
 }
 `````
 
-### About CORBA
+#### About CORBA
 
 The `CorbaComm` lib hides any `CORBA` knowledge/information, if you are really interested in this topic, please take a look and visit the followings to have a basic understanding of `CORBA` technology.
 * [OMG Welcome to CORBA](http://www.corba.org)
@@ -163,7 +173,7 @@ The `CorbaComm` lib hides any `CORBA` knowledge/information, if you are really i
 * [omniORB, my favarite CORBA implementation, including CORBA Name Service omniNames](http://omniorb.sourceforge.net/)
 * [omniNotify, CORBA Notification Service Based on omniORB](http://omninotify.sourceforge.net/)
 
-# 2. Prerequisite
+## 2. Build Prerequisite
 
 `CorbaComm` lib implementation depends `omniORB` and `omniNotify`. Before building `CorbaComm`, you must build and install both `omniORB` and `omniNotify` first. Then run `Name Service, omniNames` from `omniORB` and `Notification Service, notifd` from `omniNotify`.    
 
@@ -232,7 +242,7 @@ The above library search path `/usr/local/lib` is `omniORB/omniNotify` libraries
 
 Please visit origin website and omniORB's/omniNotify's README for more detail and concrete information.
 
-# 3. How to Build CorbaComm
+## 3. How to Build CorbaComm
 
 Currently `CorbaComm` is built and tested under `Linux` and `Mac` only, you may need to modify `Makefile` in order to build for other platforms. `CorbaComm` has been tested under `Ubuntu Linux 32/64-bit`, `Raspberry Pi3 32-bit` and `Mac OSX 32/64-bit`.     
 
@@ -258,11 +268,11 @@ cd examples
 make
 ````
 
-# 4. C++ class and methods
+## 4. C++ Class And Methods
 
 As the above description, the intent of this library is to make things simple. There are only one C++ class and 6 public methods exposed in this library, as below:
 
-### C++ Namespace And Class
+#### C++ Namespace And Class
 
 There only one public C++ class `CorbaComm` is in the `cc` namespace.
 ```
@@ -275,7 +285,7 @@ class CorbaComm {
 };
 ```
 
-### Typedef's
+#### Typedef's
 
 ```
 typedef std::string (*CommandCallback_t)(const std::string& cmd,
@@ -306,7 +316,7 @@ typedef std::string SID;
 Description: Used for onEvent(); please refer to ::onEvent() method.
 ```
 
-### Public Methods
+#### Public Methods
 ```
 static CorbaComm* connect(const char* hostId,
                           Commands offerCommands,
@@ -365,16 +375,25 @@ Description: To unsubscribe an event
 Parameters : const SID&, the `subscription id` returned by `onEvent()`
 Return     : N/A
 ```
+## 5. Running Examples
 
-# 5. Command Routing
+There are [six examples](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples) available for your study, understanding and reference.   
 
-If you have read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) examples, you may experience how simple and easy they are. The client will never know who and where the server is, even without any knowledge/information about `IP`, `hostname`, or `port`, but it does make a RPC-invocation successfully. Actually, the `call-path` is routed automatically by `CorbaComm`. The mechanism is called `Command Routing`.
+* [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rpcServer.cc) demonstrate basic RPC-call.   
+* [publisher.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/publisher.cc) and [subscriber.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/subscriber.cc) demonstrate publish-subscribe messaging model communication.
+* [rwClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwClient.cc) and [rwServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwServer.cc) demonstrate how shared resources must be procteded.
+
+Befor you can start running these examples, please make sure Name Service `omniNaems` and Notification Service `notifd` are running without any issues.
+
+## 6. Command Routing
+
+If you have read [rpcClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcClient.cc) and [rpcServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/rpcServer.cc) examples, you may experience how simple and easy they are. The client will never know who and where the server is, even without any knowledge/information about `IP`, `hostname`, or `port`, but it does make an RPC-invocation successfully. Actually, the `call-path` is routed automatically by `CorbaComm`. The mechanism is called `Command Routing`.
 
 The `CorbaComm` support two types of `Command Routing`, they are:
 * **Early Command Routing**
 * **Late Command Routing**
 
-## Early Command Routing
+### Early Command Routing
 
 `Early Command Routing` is done immediately after you launch a client or a server process.   
 
@@ -382,12 +401,36 @@ If you want `CorbaComm` to do `Early Command Routing`, your code must explicitly
 
 Once the `call-path` is determined, the `CorbaComm` will cache this path, no more routing tasks is needed for later invocations.
 
-## Late Command Routing
+### Late Command Routing
 
 `Late Command Routing` means the call-path is routed on demand. If a server doen't specify the second parameter (offer commands) of `connect()`, or a client doesn't specify the third pamameter (want commands), the `call-path` is routed when a client makes the first attempt of invocation.    
 
 Like `Early Command Routing`, once the call-path is determined, it'll be cached and no more routing tasks is needed for later invocations.
 
-Sometimes `Late Command Routing` is refered to `Lazy Command Routing`, since the devlopers are `lazy` to specify the second and third parameters of `connect()`, leave them both empty.   
+Sometimes `Late Command Routing` is refered to `Lazy Command Routing`, since the devlopers are `lazy` to specify the second and third parameters of `connect()`, leave them both empty.  
 
+[rwClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwClient.cc) and [rwServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwServer.cc) are examples of `Late Command Routing`; you'll see the second and the third paramters of `connect()` from both source codes are empty. Thanks to `Late Command Routing`, they do work.
 
+## 7. Multithreading Considerations
+
+All `CorbaComm` apps are multithreading, although you don't see any clues from source code, such as [examples/subscriber.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/subscriber.cc).    
+
+The rationale is `CorbaComm` is developed base on `CORBA`, all the `Callback` functions, such as `onEvent()'` and `onCmd()'` callbacks are invoked by a `CORBA thread`.     
+
+That's the reason why there are a busy-while-loop in [examples/subscriber.cc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/examples/subscriber.cc) but the process still can receives `events`; since the callback is called on another thread, not on any threads you created expcilitly.
+
+Whatever resources that `Callbacks` of `onEvent()` or `onCmd` access to implies the resources could be read/written concurrently. If there's no protection mechanism, the resources tend to be corrupted.
+
+[rwClient.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwClient.cc) and [rwServer.cc](https://github.com/edwardlintw/CorbaComm-RPC/tree/master/examples/rwServer.cc) are simple examples to demonstrate how shared resources are protected.
+
+## 8. Distributed RPC
+
+`CorbaComm` supports `Distributed RPC`. Before you deploy `CorbaComm` apps to distributed environment, you'd better understand what `CORBA Naming Service` is.      
+
+The concept of `CORBA Naming Service` is similar to `DNS`. If I ask you "do you know what is the `IP address` of `github.com`", I guess your answer is `No`, me neither.   
+
+`IP address` is annoying, to remember `IP address` of any website is non-sense. This is the reason why `DNS` was invented. `DNS`, the Domain Name Server, resolves `IP address` of a website by its `domain name`. Thus, we can surf internet world by `Domain Names` and forget any `IP addresses`.   
+
+`CORBA Name Server` does the similar thing. Each `CORBA Object` has a unique ID, any `CORBA Object` can bind its `Object ID` with pre-defined `Context Name` to `CORBA Name Server`. Thus the client can resolve `Object ID` with known `Context Name` from `CORBA Name Server` to make a direct RPC-call.   
+
+What's the catch? Rember the first parameter `hostId` of method `connect()`? This is the reason why this `hostId` must be unique, because it's part of the `CORBA Context Name`, although it is hidden.   

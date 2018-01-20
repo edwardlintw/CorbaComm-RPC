@@ -19,11 +19,6 @@ int main(int argc, char* argv[])
                            { }, { },            // both empty
                            argc, argv);
 
-    if (nullptr == _cc) {
-        std::cerr << "Can't connect to CorbaComm.\n";
-        return -1;
-    }
-
     _cc->onEvent(topicHumidity, &eventCallback);
     _cc->onEvent(topicTemperature,
                  [](const std::string&, const std::string& param) {
