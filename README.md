@@ -443,10 +443,20 @@ If you've ever run the [examples](https://github.com/edwardlintw/CorbaComm-RPC/b
 
 ![remote_rpc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/remote_rpc.png)   
 
-As the above image, if your `rpcServer` and `omniNames` reiside in `192.168.0.101` and you'd like to launch `rpcClient` from another machine, all you have to do is to specify addition `command line arguments` as below.
+As the above image, if your `rpcServer` and `omniNames` reiside in `192.168.0.101` and you'd like to launch `rpcClient` from another machine, all you have to do is specify addition `command line arguments` as below.
 
 ```
 ./rpcClient -ORBInitRef NameService=corbaname::192.168.1.101
 ```
 
-It means the `./rpcClient` is going to resolve `server's object reference` from `NameServer` which resides at `IP 192.168.1.101`.
+It means the `./rpcClient` is going to resolve `server's object reference` from `NameServer` which resides at `IP 192.168.1.101`.   
+
+Below are two more alternatives.   
+
+![remote_rpc2](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/remote_rpc2.png)   
+
+        
+
+![remote_rpc3](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/remote_rpc3.png)  
+
+**Generally speaking, all you have to know is `Name Server's URI` to deploy you `CorbaComm` applications.**
