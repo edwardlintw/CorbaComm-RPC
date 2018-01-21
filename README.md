@@ -429,8 +429,24 @@ Whatever resources that `Callbacks` of `onEvent()` or `onCmd` access to implies 
 
 The concept of `CORBA Naming Service` is similar to `DNS`. If I ask you "do you know what is the `IP address` of `github.com`", I guess your answer is `No`, me neither.   
 
-`IP address` is annoying, to remember `IP address` of any website is non-sense. This is the reason why `DNS` was invented. `DNS`, the Domain Name Server, resolves `IP address` of a website by its `domain name`. Thus, we can surf internet world by `Domain Names` and forget any `IP addresses`.   
+`IP address` is annoying, to remember `IP address` of any website is non-sense. This is the reason why `DNS` was invented. `DNS`, the Domain Name Server, resolves `IP address` of a website by its `domain name`. Thus, we can surf internet world by assistance of `Domain Names` and forget any `IP addresses`.   
 
-`CORBA Name Server` does the similar thing. Each `CORBA Object` has a unique ID, any `CORBA Object` can bind its `Object ID` with pre-defined `Context Name` to `CORBA Name Server`. Thus the client can resolve `Object ID` with known `Context Name` from `CORBA Name Server` to make a direct RPC-call.   
+`CORBA Name Server` does the similar thing. Each `CORBA Object` has a unique `Context Name`, any `CORBA Object` can `bind` its `Object Reference` with pre-defined `Context Name` to `CORBA Name Server`. Thus the client can `resolve` the  `Object Reference` with known `Context Name` from `CORBA Name Server` to make a direct RPC-call.   
 
-What's the catch? Rember the first parameter `hostId` of method `connect()`? This is the reason why this `hostId` must be unique, because it's part of the `CORBA Context Name`, although it is hidden.   
+That's the sceret. Rember the first parameter `hostId` of method `connect()`? This is the reason why this `hostId` must be unique, because it's part of the `CORBA Context Name`, although it is hidden by the `CorbaComm API`.   
+
+![omniNames](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/NameServer_bind_resolve.png)
+
+Knowing how to interact with `CORBA NameServer` is the key to `Distrubuted RPC`.   
+
+If you've ever run the [examples](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/NameServer_bind_resolve.png) without specifying `command line arguments`, it is almost `co-location RPC`; both server and clients reside in the same machine. To make a `Distributed RPC`, you need to specify additional `command line arguments`.    
+
+![remote_rpc](https://github.com/edwardlintw/CorbaComm-RPC/blob/master/resources/remote_rpc.png)   
+
+As the above image, if your `rpcServer` and `omniNames` reiside in `192.168.0.101` and you'd like to launch `rpcClient` from another machine, all you have to do is to specify addition `command line arguments` as below.
+
+```
+./rpcClient -ORBInitRef NameService=corbaname::192.168.1.101
+```
+
+It means the `./rpcClient` is going to resolve `server's object reference` from `NameServer` which resides at `IP 192.168.1.101`.
